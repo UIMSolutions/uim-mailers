@@ -16,7 +16,7 @@ class SmtpTransport : AbstractTransport {
         self.AUTH_XOAUTH2,
     ];
 
-    protected Json[string] _defaultConfigData = [
+    protected IData[string] _defaultConfigData = [
         "host": "localhost",
         "port": 25,
         "timeout": 30,
