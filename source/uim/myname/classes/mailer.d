@@ -150,7 +150,7 @@ class Mailer : IEventListener {
      * Hold message, renderer and transport instance for restoring after running
      * a mailer action.
      */
-    protected Json[string] clonedInstances = [
+    protected IData[string] clonedInstances = [
         "message": null,
         "renderer": null,
         "transport": null,
@@ -169,7 +169,7 @@ class Mailer : IEventListener {
     /**
      * Constructor
      * Params:
-     * Json[string]|string configData Array of configs, or string to load configs from app.d
+     * IData[string]|string configData Array of configs, or string to load configs from app.d
      */
     this(string[]|null configData = null) {
         this.message = new this.messageClass();
@@ -314,7 +314,7 @@ class Mailer : IEventListener {
     /**
      * Sets the configuration profile to use for this instance.
      * Params:
-     * Json[string]|string configData String with configuration name, or
+     * IData[string]|string configData String with configuration name, or
      *   an array with config.
      */
     auto setProfile(string[] configData) {
@@ -444,7 +444,7 @@ class Mailer : IEventListener {
     /**
      * Set logging config.
      * Params:
-     * Json[string]|string|true log Log config.
+     * IData[string]|string|true log Log config.
      */
     protected void setLogConfig(string[]|bool log) {
         configData = [
@@ -473,7 +473,7 @@ class Mailer : IEventListener {
      * Implemented events.
      *
      */
-    Json[string] implementedEvents() {
+    IData[string] implementedEvents() {
         return null;
     }
 }

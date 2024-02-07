@@ -4,18 +4,14 @@ import uim.cake;
 
 @safe:
 
-/* * MailSentFromConstraint
- *
- * @internal
- */
+// MailSentFromConstraint
 class MailSentFrom : MailSentWith {
     protected string amethod = "from";
 
     // Assertion message string
     override string toString() {
-        if (this.at) {
-            return "sent email #%d".format(this.at);
-        }
-        return "sent an email";
+        return this.at
+            ? "sent email #%d".format(this.at)
+            : "sent an email";
     }
 }

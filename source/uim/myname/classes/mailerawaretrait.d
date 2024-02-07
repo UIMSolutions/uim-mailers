@@ -16,7 +16,7 @@ template MailerAwareTemplate {
      * Returns a mailer instance.
      * Params:
      * string aName Mailer"s name.
-     * @param Json[string]|string configData Array of configs, or profile name string.
+     * @param IData[string]|string configData Array of configs, or profile name string.
      */
     protected Mailer getMailer(string aName, string[]|null configData = null) {
         string className = App.className($name, "Mailer", "Mailer");

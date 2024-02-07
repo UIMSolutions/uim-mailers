@@ -17,7 +17,7 @@ module uim.cake.Mailer;
 abstract class AbstractTransport {
     use InstanceConfigTemplate();
 
-    protected Json[string] _defaultConfigData;
+    protected IData[string] _defaultConfigData;
 
     /**
      * Send mail
@@ -40,7 +40,7 @@ abstract class AbstractTransport {
         this.setConfig(configData);
     }
 
-    bool initialize(Json[string] initData = null) {
+    bool initialize(IData[string] initData = null) {
        _defaultConfig = Json .emptyObject;
     }
     
