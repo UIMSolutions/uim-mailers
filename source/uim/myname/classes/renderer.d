@@ -29,20 +29,20 @@ class Renderer {
     STRINGAA render(string acontent, array types = []) {
         rendered = [];
         template = this.viewBuilder().getTemplate();
-        if (isEmpty($template)) {
+        if (isEmpty(template)) {
             types.each!(type => rendered[type] = content);
             return rendered;
         }
         view = this.createView();
 
-        [$templatePlugin] = pluginSplit($view.getTemplate());
-        [$layoutPlugin] = pluginSplit($view.getLayout());
-        if ($templatePlugin) {
-            view.setPlugin($templatePlugin);
-        } else if ($layoutPlugin) {
-            view.setPlugin($layoutPlugin);
+        [templatePlugin] = pluginSplit(view.getTemplate());
+        [layoutPlugin] = pluginSplit(view.getLayout());
+        if (templatePlugin) {
+            view.setPlugin(templatePlugin);
+        } else if (layoutPlugin) {
+            view.setPlugin(layoutPlugin);
         }
-        if ($view.get("content").isNull) {
+        if (view.get("content").isNull) {
             view.set("content", content);
         }
 

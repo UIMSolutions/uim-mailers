@@ -19,7 +19,7 @@ template MailerAwareTemplate {
      * @param IData[string]|string configData Array of configs, or profile name string.
      */
     protected Mailer getMailer(string aName, string[]|null configData = null) {
-        string className = App.className($name, "Mailer", "Mailer");
+        string className = App.className(name, "Mailer", "Mailer");
         if (className.isNull) {
             throw new MissingMailerException(compact("name"));
         }

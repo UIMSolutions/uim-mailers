@@ -27,7 +27,7 @@ class Message : JsonSerializable {
     const string MESSAGE_BOTH = "both";
 
     // Holds the regex pattern for email validation
-    const string EMAIL_PATTERN = "/^((?:[\p{L}0-9.!#$%&\"*+\/=?^_`{|}~-]+)*@[\p{L}0-9-._]+)$/ui";
+    const string EMAIL_PATTERN = "/^((?:[\p{L}0-9.!#%&\"*+\/=?^_`{|}~-]+)*@[\p{L}0-9-._]+)/ui";
 
     // Recipient of the email
     protected array to = [];
@@ -207,7 +207,7 @@ class Message : JsonSerializable {
         if (this.appCharset !isNull) {
             this.charset = this.appCharset;
         }
-        this.domain = (string)preg_replace("/\:\d+$/", "", (string)enviroment("HTTP_HOST"));
+        this.domain = (string)preg_replace("/\:\d+/", "", (string)enviroment("HTTP_HOST"));
         if (isEmpty(this.domain)) {
             this.domain = php_uname("n");
         }
@@ -434,9 +434,9 @@ class Message : JsonSerializable {
      * @throws \InvalidArgumentException
      */
     auto setTransferEncoding(string aencoding) {
-        if ($encoding !isNull) {
+        if (encoding !isNull) {
             encoding = encoding.toLower;
-            if (!in_array($encoding, this.transferEncodingAvailable, true)) {
+            if (!in_array(encoding, this.transferEncodingAvailable, true)) {
                 throw new InvalidArgumentException(
                     "Transfer encoding not available. Can be : %s."
                     .format(join(", ", this.transferEncodingAvailable))
@@ -483,21 +483,21 @@ class Message : JsonSerializable {
      * @param string name Name
      */
     protected void setEmail(string avarName, string[] aemail, string aName) {
-        if (!isArray($email)) {
-            this.validateEmail($email, varName);
-            this.{$varName} = [$email: name ?? email];
+        if (!isArray(email)) {
+            this.validateEmail(email, varName);
+            this.{varName} = [email: name ?? email];
 
             return;
         }
         list = [];
-        foreach ($email as aKey: aValue) {
+        foreach (email as aKey: aValue) {
             if (isInt(aKey)) {
                 aKey = aValue;
             }
             this.validateEmail(aKey, varName);
             list[aKey] = aValue ?? aKey;
         }
-        this.{$varName} = list;
+        this.{varName} = list;
     }
     
     /**
@@ -514,11 +514,11 @@ class Message : JsonSerializable {
         } else if (preg_match(this.emailPattern, emailAddress)) {
             return;
         }
-        context = ltrim($context, "_");
+        context = ltrim(context, "_");
         if (emailAddress.isEmpty) {
-            throw new InvalidArgumentException("The email set for `%s` is empty.".format($context));
+            throw new InvalidArgumentException("The email set for `%s` is empty.".format(context));
         }
-        throw new InvalidArgumentException("Invalid email set for `%s`. You passed `%s`.".format($context, emailAddress));
+        throw new InvalidArgumentException("Invalid email set for `%s`. You passed `%s`.".format(context, emailAddress));
     }
     
     /**
@@ -531,15 +531,15 @@ class Message : JsonSerializable {
      * @param string athrowMessage Exception message
      */
     protected void setEmailSingle(string avarName, string[] aemail, string aName, string exceptionMessage) {
-        if ($email == []) {
-            this.{$varName} = email;
+        if (email == []) {
+            this.{varName} = email;
             return;
         }
 
-        auto current = this.{$varName};
-        this.setEmail($varName, email, name);
-        if (count(this.{$varName}) != 1) {
-            this.{$varName} = current;
+        auto current = this.{varName};
+        this.setEmail(varName, email, name);
+        if (count(this.{varName}) != 1) {
+            this.{varName} = current;
             throw new InvalidArgumentException(exceptionMessage);
         }
     }
@@ -556,7 +556,7 @@ class Message : JsonSerializable {
         if (!isArray(emailValue)) {
             this.validateEmail(emailValue, varName);
             name ??= emailValue;
-            this.{$varName}[emailValue] = name;
+            this.{varName}[emailValue] = name;
 
             return;
         }
@@ -569,7 +569,7 @@ class Message : JsonSerializable {
                 this.validateEmail(aKey, varName);
                 list[aKey] = aValue;
             });
-        this.{$varName} = chain(this.{$varName}, list);
+        this.{varName} = chain(this.{varName}, list);
     }
     
     /**
@@ -578,7 +578,7 @@ class Message : JsonSerializable {
      * string asubject Subject string.
      */
     auto setSubject(string asubject) {
-        this.subject = this.encodeForHeader($subject);
+        this.subject = this.encodeForHeader(subject);
 
         return this;
     }
@@ -661,12 +661,12 @@ class Message : JsonSerializable {
             "bcc": "Bcc",
         ];
          aHeadersMultipleEmails = ["to", "cc", "bcc", "replyTo"];
-        foreach ($relation as var:  aHeader) {
-            if (anInclude[$var]) {
-                if (in_array($var,  aHeadersMultipleEmails)) {
-                     aHeaders[aHeader] = join(", ", this.formatAddress(this.{$var}));
+        foreach (relation as var:  aHeader) {
+            if (anInclude[var]) {
+                if (in_array(var,  aHeadersMultipleEmails)) {
+                     aHeaders[aHeader] = join(", ", this.formatAddress(this.{var}));
                 } else {
-                     aHeaders[aHeader] = (string)current(this.formatAddress(this.{$var}));
+                     aHeaders[aHeader] = (string)current(this.formatAddress(this.{var}));
                 }
             }
         }
@@ -731,7 +731,7 @@ class Message : JsonSerializable {
                  aHeaders ~= aKey ~ ": " ~ val;
             }
         }
-        return join($eol,  aHeaders);
+        return join(eol,  aHeaders);
     }
     
     /**
@@ -745,15 +745,15 @@ class Message : JsonSerializable {
      */
     protected array formatAddress(array address) {
         auto result;
-        foreach ($address as email: alias) {
-            if ($email == alias) {
+        foreach (address as email: alias) {
+            if (email == alias) {
                 result ~= email;
             } else {
-                encoded = this.encodeForHeader($alias);
+                encoded = this.encodeForHeader(alias);
                 if (preg_match("/[^a-z0-9+\-\\=? ]/i", encoded)) {
-                    encoded = "\"" ~ addcslashes($encoded, ""\\") ~ "\"";
+                    encoded = "\"" ~ addcslashes(encoded, ""\\") ~ "\"";
                 }
-                result ~= "%s <%s>".format($encoded, email);
+                result ~= "%s <%s>".format(encoded, email);
             }
         }
         return result;
@@ -783,7 +783,7 @@ class Message : JsonSerializable {
         if (format == MESSAGE_BOTH) {
             return [MESSAGE_HTML, MESSAGE_TEXT];
         }
-        return [$format];
+        return [format];
     }
     
     /**
@@ -798,7 +798,7 @@ class Message : JsonSerializable {
         
     }
     void setMessageId(string message) {
-        if (!preg_match("/^\<.+@.+\>$/", message)) {
+        if (!preg_match("/^\<.+@.+\>/", message)) {
             throw new InvalidArgumentException(
                 "Invalid format to Message-ID. The text should be something like "<uuid@server.com>""
             );
@@ -898,7 +898,7 @@ class Message : JsonSerializable {
                 string fileName = dirEntry["file"];
                 dirEntry["file"] = realpath(dirEntry["file"]);
                 if (dirEntry["file"] == false || !file_exists(dirEntry["file"])) {
-                    throw new InvalidArgumentException("File not found: `%s`".format($fileName));
+                    throw new InvalidArgumentException("File not found: `%s`".format(fileName));
                 }
                 if (isInt(attName)) {
                     attName = basename(dirEntry["file"]);
@@ -940,8 +940,8 @@ class Message : JsonSerializable {
      */
     void addAttachments(array attachments) {
         current = this.attachments;
-        this.setAttachments($attachments);
-        this.attachments = array_merge($current, this.attachments);
+        this.setAttachments(attachments);
+        this.attachments = array_merge(current, this.attachments);
     }
     
     /**
@@ -983,21 +983,21 @@ class Message : JsonSerializable {
         string[] message = [];
 
         contentIds = array_filter((array)Hash.extract(this.attachments, "{s}.contentId"));
-        hasInlineAttachments = count($contentIds) > 0;
+        hasInlineAttachments = count(contentIds) > 0;
         hasAttachments = !empty(this.attachments);
         hasMultipleTypes = this.emailFormat == MESSAGE_BOTH;
-        multiPart = ($hasAttachments || hasMultipleTypes);
+        multiPart = (hasAttachments || hasMultipleTypes);
 
         boundary = this.boundary ?? "";
         relBoundary = textBoundary = boundary;
 
-        if ($hasInlineAttachments) {
+        if (hasInlineAttachments) {
             message ~= "--" ~ boundary;
             message ~= "Content-Type: multipart/related; boundary="rel-" ~ boundary ~ """;
             message ~= "";
             relBoundary = textBoundary = "rel-" ~ boundary;
         }
-        if ($hasMultipleTypes && hasAttachments) {
+        if (hasMultipleTypes && hasAttachments) {
             message ~= "--" ~ relBoundary;
             message ~= "Content-Type: multipart/alternative; boundary="alt-" ~ boundary ~ """;
             message ~= "";
@@ -1007,14 +1007,14 @@ class Message : JsonSerializable {
             this.emailFormat == MESSAGE_TEXT
             || this.emailFormat == MESSAGE_BOTH
         ) {
-            if ($multiPart) {
+            if (multiPart) {
                 message ~= "--" ~ textBoundary;
                 message ~= "Content-Type: text/plain; charset=" ~ this.getContentTypeCharset();
                 message ~= "Content-Transfer-Encoding: " ~ this.getContentTransferEncoding();
                 message ~= "";
             }
             content = split("\n", this.textMessage);
-            message = array_merge($message, content);
+            message = array_merge(message, content);
             message ~= "";
             message ~= "";
         }
@@ -1022,33 +1022,33 @@ class Message : JsonSerializable {
             this.emailFormat == MESSAGE_HTML
             || this.emailFormat == MESSAGE_BOTH
         ) {
-            if ($multiPart) {
+            if (multiPart) {
                 message ~= "--" ~ textBoundary;
                 message ~= "Content-Type: text/html; charset=" ~ this.getContentTypeCharset();
                 message ~= "Content-Transfer-Encoding: " ~ this.getContentTransferEncoding();
                 message ~= "";
             }
             string[] content = split("\n", this.htmlMessage);
-            message = array_merge($message, content);
+            message = array_merge(message, content);
             message ~= "";
             message ~= "";
         }
-        if ($textBoundary != relBoundary) {
+        if (textBoundary != relBoundary) {
             message ~= "--" ~ textBoundary ~ "--";
             message ~= "";
         }
-        if ($hasInlineAttachments) {
-            attachments = this.attachInlineFiles($relBoundary);
-            message = array_merge($message, attachments);
+        if (hasInlineAttachments) {
+            attachments = this.attachInlineFiles(relBoundary);
+            message = array_merge(message, attachments);
             message ~= "";
             message ~= "--" ~ relBoundary ~ "--";
             message ~= "";
         }
-        if ($hasAttachments) {
-            attachments = this.attachFiles($boundary);
-            message = array_merge($message, attachments);
+        if (hasAttachments) {
+            attachments = this.attachFiles(boundary);
+            message = array_merge(message, attachments);
         }
-        if ($hasAttachments || hasMultipleTypes) {
+        if (hasAttachments || hasMultipleTypes) {
             message ~= "";
             message ~= "--" ~ boundary ~ "--";
             message ~= "";
@@ -1076,15 +1076,15 @@ class Message : JsonSerializable {
             );
             part = new FormDataPart("", someData, "", this.getHeaderCharset());
 
-            if ($hasDisposition) {
+            if (hasDisposition) {
                 part.disposition("attachment");
-                part.filename($filename);
+                part.filename(filename);
             }
             part.transferEncoding("base64");
             part.type(dirEntry["mimetype"]);
 
             message ~= "--" ~ boundary;
-            message ~= (string)$part;
+            message ~= (string)part;
             message ~= "";
         }
         return message;
@@ -1110,8 +1110,8 @@ class Message : JsonSerializable {
             part.type(dirEntry["mimetype"]);
             part.transferEncoding("base64");
             part.contentId(dirEntry["contentId"]);
-            part.filename($filename);
-            message ~= (string)$part;
+            part.filename(filename);
+            message ~= (string)part;
             message ~= "";
         }
         return message;
@@ -1162,19 +1162,19 @@ class Message : JsonSerializable {
      *  content string of respective type.
      */
     auto setBody(array content) {
-        foreach ($content as type: text) {
-            if (!in_array($type, this.emailFormatAvailable, true)) {
+        foreach (content as type: text) {
+            if (!in_array(type, this.emailFormatAvailable, true)) {
                 throw new InvalidArgumentException(
                     "Invalid message type: `%s`. Valid types are: `text`, `html`.".format(
                     type
                 ));
             }
             text = text.replace(["\r\n", "\r"], "\n");
-            text = this.encodeString($text, this.getCharset());
-            text = this.wrap($text);
+            text = this.encodeString(text, this.getCharset());
+            text = this.wrap(text);
             text = text.join("\n").rstrip("\n");
 
-             aProperty = "{$type}Message";
+             aProperty = "{type}Message";
             this. aProperty = text;
         }
         this.boundary = null;
@@ -1231,9 +1231,9 @@ class Message : JsonSerializable {
             return text;
         }
         if (this.appCharset.isNull) {
-            return mb_convert_encoding($text, charset);
+            return mb_convert_encoding(text, charset);
         }
-        return mb_convert_encoding($text, charset, this.appCharset);
+        return mb_convert_encoding(text, charset, this.appCharset);
     }
     
     /**
@@ -1243,27 +1243,27 @@ class Message : JsonSerializable {
      * @param int wrapLength The line length
      */
     protected string[] wrap(string amessage = null, int wrapLength = self.LINE_LENGTH_MUST) {
-        if ($message.isNull || message.isEmpty) {
+        if (message.isNull || message.isEmpty) {
             return [""];
         }
         message = message.replace(["\r\n", "\r"], "\n");
         string[] lines = split("\n", message);
         formatted = [];
-        cut = ($wrapLength == LINE_LENGTH_MUST);
+        cut = (wrapLength == LINE_LENGTH_MUST);
 
-        foreach ($lines as line) {
-            if (isEmpty($line) && line != "0") {
+        foreach (lines as line) {
+            if (isEmpty(line) && line != "0") {
                 formatted ~= "";
                 continue;
             }
-            if ($line.length < wrapLength) {
+            if (line.length < wrapLength) {
                 formatted ~= line;
                 continue;
             }
             if (!preg_match("/<[a-z]+.*>/i", line)) {
                 formatted = array_merge(
                     formatted,
-                    split("\n", Text.wordWrap($line, wrapLength, "\n", cut))
+                    split("\n", Text.wordWrap(line, wrapLength, "\n", cut))
                 );
                 continue;
             }
@@ -1273,23 +1273,23 @@ class Message : JsonSerializable {
             tmpLineLength = 0;
             for (anI = 0, count = line.length;  anI < count;  anI++) {
                 char = line[anI];
-                if ($tagOpen) {
+                if (tagOpen) {
                     tag ~= char;
-                    if ($char == ">") {
+                    if (char == ">") {
                         tagLength = tag.length;
-                        if ($tagLength + tmpLineLength < wrapLength) {
+                        if (tagLength + tmpLineLength < wrapLength) {
                             tmpLine ~= tag;
                             tmpLineLength += tagLength;
                         } else {
-                            if ($tmpLineLength > 0) {
+                            if (tmpLineLength > 0) {
                                 formatted = chain(
                                     formatted,
-                                    split("\n", Text.wordWrap(trim($tmpLine), wrapLength, "\n", cut))
+                                    split("\n", Text.wordWrap(trim(tmpLine), wrapLength, "\n", cut))
                                 );
                                 tmpLine = "";
                                 tmpLineLength = 0;
                             }
-                            if ($tagLength > wrapLength) {
+                            if (tagLength > wrapLength) {
                                 formatted ~= tag;
                             } else {
                                 tmpLine = tag;
@@ -1301,40 +1301,40 @@ class Message : JsonSerializable {
                     }
                     continue;
                 }
-                if ($char == "<") {
+                if (char == "<") {
                     tagOpen = true;
                     tag = "<";
                     continue;
                 }
-                if ($char == " " && tmpLineLength >= wrapLength) {
+                if (char == " " && tmpLineLength >= wrapLength) {
                     formatted ~= tmpLine;
                     tmpLineLength = 0;
                     continue;
                 }
                 tmpLine ~= char;
                 tmpLineLength++;
-                if ($tmpLineLength == wrapLength) {
+                if (tmpLineLength == wrapLength) {
                     nextChar = line[anI + 1] ?? "";
-                    if ($nextChar == " " || nextChar == "<") {
-                        formatted ~= trim($tmpLine);
+                    if (nextChar == " " || nextChar == "<") {
+                        formatted ~= trim(tmpLine);
                         tmpLine = "";
                         tmpLineLength = 0;
-                        if ($nextChar == " ") {
+                        if (nextChar == " ") {
                              anI++;
                         }
                     } else {
-                        lastSpace = strrpos($tmpLine, " ");
-                        if ($lastSpace == false) {
+                        lastSpace = strrpos(tmpLine, " ");
+                        if (lastSpace == false) {
                             continue;
                         }
-                        formatted ~= trim(substr($tmpLine, 0, lastSpace));
-                        tmpLine = substr($tmpLine, lastSpace + 1);
+                        formatted ~= trim(substr(tmpLine, 0, lastSpace));
+                        tmpLine = substr(tmpLine, lastSpace + 1);
 
                         tmpLineLength = tmpLine.length;
                     }
                 }
             }
-            if (!empty($tmpLine)) {
+            if (!empty(tmpLine)) {
                 formatted ~= tmpLine;
             }
         }
@@ -1382,7 +1382,7 @@ class Message : JsonSerializable {
         restore = mb_internal_encoding();
         mb_internal_encoding(this.appCharset);
         auto result = mb_encode_mimeheader(textToEncode, this.getHeaderCharset(), "B");
-        mb_internal_encoding($restore);
+        mb_internal_encoding(restore);
 
         return result;
     }
@@ -1399,7 +1399,7 @@ class Message : JsonSerializable {
         restore = mb_internal_encoding();
         mb_internal_encoding(this.appCharset);
         result = mb_decode_mimeheader(textToEncode);
-        mb_internal_encoding($restore);
+        mb_internal_encoding(restore);
 
         return result;
     }
@@ -1411,12 +1411,12 @@ class Message : JsonSerializable {
      *  or IUploadedFile instance.
      */
     protected string readFile(IUploadedFile|string afile) {
-        if (isString($file)) {
-            content = (string)file_get_contents($file);
+        if (isString(file)) {
+            content = (string)file_get_contents(file);
         } else {
-            content = (string)$file.getStream();
+            content = (string)file.getStream();
         }
-        return chunk_split(base64_encode($content));
+        return chunk_split(base64_encode(content));
     }
     
     /**
@@ -1428,7 +1428,7 @@ class Message : JsonSerializable {
             return this.transferEncoding;
         }
         charset = strtoupper(this.charset);
-        if (in_array($charset, this.charset8bit, true)) {
+        if (in_array(charset, this.charset8bit, true)) {
             return "8bit";
         }
         return "7bit";
@@ -1442,8 +1442,8 @@ class Message : JsonSerializable {
      */
     string getContentTypeCharset() {
         charset = strtoupper(this.charset);
-        if (array_key_exists($charset, this.contentTypeCharset)) {
-            return strtoupper(this.contentTypeCharset[$charset]);
+        if (array_key_exists(charset, this.contentTypeCharset)) {
+            return strtoupper(this.contentTypeCharset[charset]);
         }
         return strtoupper(this.charset);
     }
@@ -1460,14 +1460,14 @@ class Message : JsonSerializable {
         foreach (this.serializableProperties as  aProperty) {
             array[aProperty] = this.{ aProperty};
         }
-         array_walk($array["attachments"], auto (& anItem, aKey) {
+         array_walk(array["attachments"], auto (& anItem, aKey) {
             if (!empty(anItem["file"])) {
                  anItem["data"] = this.readFile(anItem["file"]);
                 unset(anItem["file"]);
             }
         });
 
-        return array_filter($array, auto (anI) {
+        return array_filter(array, auto (anI) {
             return anI !isNull && !isArray(anI) && !isBool(anI) && anI.length || !empty(anI);
         });
     }
@@ -1489,7 +1489,7 @@ class Message : JsonSerializable {
      */
     array __serialize() {
         array = this.jsonSerialize();
-        array_walk_recursive($array, void (& anItem, aKey) {
+        array_walk_recursive(array, void (& anItem, aKey) {
             if (cast(SimpleXMLElement)anItem ) {
                  anItem = json_decode((string)json_encode((array) anItem), true);
             }

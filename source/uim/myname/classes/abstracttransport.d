@@ -24,7 +24,7 @@ abstract class AbstractTransport {
      * Params:
      * \UIM\Mailer\Message message Email message.
      */
-    abstract array send(Message$message);
+    abstract array send(Messagemessage);
 
     /**
      * Constructor
@@ -49,7 +49,7 @@ abstract class AbstractTransport {
      * Params:
      * \UIM\Mailer\Message message Message instance.
      */
-    protected auto checkRecipient(Message$message) {
+    protected auto checkRecipient(Messagemessage) {
         if (
             message.getTo() == []
             && message.getCc() == []

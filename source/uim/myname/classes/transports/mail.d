@@ -8,7 +8,7 @@ import uim.cake;
 class MailTransport : AbstractTransport {
  
     array send(Message message) {
-        this.checkRecipient($message);
+        this.checkRecipient(message);
 
         // https://github.com/UIM/UIM/issues/2209
         // https://bugs.d.net/bug.d?id=47983
@@ -28,15 +28,15 @@ class MailTransport : AbstractTransport {
                 "bcc",
             ],
             eol,
-            auto ($val) {
+            auto (val) {
                 return val.replace("\r\n", "");
             }
         );
 
-        message = message.getBodyString($eol);
+        message = message.getBodyString(eol);
 
         params = _configData.isSet("additionalParameters", "");
-       _mail($to, subject, message,  aHeaders, params);
+       _mail(to, subject, message,  aHeaders, params);
 
          aHeaders ~= eol ~ "To: " ~ to;
          aHeaders ~= eol ~ "Subject: " ~ subject;
@@ -62,10 +62,10 @@ class MailTransport : AbstractTransport {
         string aparams = ""
     ) {
         // phpcs:disable
-        if (!@mail($to, subject, message,  aHeaders, params)) {
+        if (!@mail(to, subject, message,  aHeaders, params)) {
             error = error_get_last();
             message = "Could not send email: " ~ error.get("message", "unknown");
-            throw new UimException($message);
+            throw new UimException(message);
         }
         // phpcs:enable
     }

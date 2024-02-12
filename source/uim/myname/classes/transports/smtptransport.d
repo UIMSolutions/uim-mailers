@@ -163,8 +163,8 @@ class SmtpTransport : AbstractTransport {
      */
     protected void _bufferResponseLines(array responseLines) {
         response = [];
-        foreach ($responseLines as responseLine) {
-            if (preg_match("/^(\d{3})(?:[-]+(.*))?$/", responseLine, match)) {
+        foreach (responseLines as responseLine) {
+            if (preg_match("/^(\d{3})(?:[-]+(.*))?/", responseLine, match)) {
                 response ~= [
                     "code": match[1],
                     "message": match[2] ?? null,
@@ -179,8 +179,8 @@ class SmtpTransport : AbstractTransport {
      */
     protected void _parseAuthType() {
         authType = _configData.isSet("authType");
-        if ($authType !isNull) {
-            if (!in_array($authType, self.SUPPORTED_AUTH_TYPES)) {
+        if (authType !isNull) {
+            if (!in_array(authType, self.SUPPORTED_AUTH_TYPES)) {
                 throw new UimException(
                     "Unsupported auth type. Available types are: " ~ join(", ", self.SUPPORTED_AUTH_TYPES)
                 );
@@ -194,23 +194,23 @@ class SmtpTransport : AbstractTransport {
         }
         
         string auth;
-        foreach ($line; _lastResponse) {
-            if ($line["message"].length == 0 || substr($line["message"], 0, 5) == "AUTH ") {
+        foreach (line; _lastResponse) {
+            if (line["message"].length == 0 || substr(line["message"], 0, 5) == "AUTH ") {
                 auth = line["message"];
                 break;
             }
         }
-        if (!$auth.isEmpty) {
+        if (!auth.isEmpty) {
             return;
         }
         foreach (self.SUPPORTED_AUTH_TYPES as type) {
-            if ($auth.has($type)) {
+            if (auth.has(type)) {
                 this.authType = type;
 
                 return;
             }
         }
-        throw new UimException("Unsupported auth type: " ~ substr($auth, 5));
+        throw new UimException("Unsupported auth type: " ~ substr(auth, 5));
     }
     
     // Connect to SMTP Server
@@ -231,16 +231,16 @@ class SmtpTransport : AbstractTransport {
             host = configData("client"];
         } else {
             httpHost = enviroment("HTTP_HOST");
-            if (isString($httpHost) && httpHost.length) {
-                [$host] = split(":", httpHost);
+            if (isString(httpHost) && httpHost.length) {
+                [host] = split(":", httpHost);
             }
         }
         try {
-           _smtpSend("EHLO {$host}", "250");
+           _smtpSend("EHLO {host}", "250");
             if (!configData("tls").isNull) {
                _smtpSend("STARTTLS", "220");
                _socket.enableCrypto("tls");
-               _smtpSend("EHLO {$host}", "250");
+               _smtpSend("EHLO {host}", "250");
             }
         } catch (SocketException  anException) {
             if (!configData("tls").isNull) {
@@ -251,7 +251,7 @@ class SmtpTransport : AbstractTransport {
                 );
             }
             try {
-               _smtpSend("HELO {$host}", "250");
+               _smtpSend("HELO {host}", "250");
             } catch (SocketException e2) {
                 throw new SocketException("SMTP server did not accept the connection.", null, e2);
             }
@@ -283,7 +283,7 @@ class SmtpTransport : AbstractTransport {
 
             default:
                 replyCode = _authPlain(username, password);
-                if ($replyCode == "235") {
+                if (replyCode == "235") {
                     break;
                 }
                _authLogin(username, password);
@@ -365,7 +365,7 @@ class SmtpTransport : AbstractTransport {
      */
     protected array _prepareFromAddress(Message message) {
         from = message.getReturnPath();
-        if (isEmpty($from)) {
+        if (isEmpty(from)) {
             from = message.getFrom();
         }
         return from;
@@ -381,7 +381,7 @@ class SmtpTransport : AbstractTransport {
         cc = message.getCc();
         bcc = message.getBcc();
 
-        return chain(array_keys($to), array_keys($cc), array_keys($bcc));
+        return chain(array_keys(to), array_keys(cc), array_keys(bcc));
     }
     
     /**
@@ -392,7 +392,7 @@ class SmtpTransport : AbstractTransport {
     protected string _prepareMessage(Message message) {
         auto lines = message.getBody();
         string messages = lines
-            .map!(line => !empty($line) && ($line[0] == ".") ? "." ~ line : line).array;
+            .map!(line => !empty(line) && (line[0] == ".") ? "." ~ line : line).array;
         return messages.join("\r\n", );
     }
     
@@ -404,11 +404,11 @@ class SmtpTransport : AbstractTransport {
      */
     protected void _sendRcpt(Message message) {
         from = _prepareFromAddress(message);
-       _smtpSend(_prepareFromCmd((string)key($from)));
+       _smtpSend(_prepareFromCmd((string)key(from)));
 
         messages = _prepareRecipientAddresses(message);
-        foreach ($messages as mail) {
-           _smtpSend(_prepareRcptCmd($mail));
+        foreach (messages as mail) {
+           _smtpSend(_prepareRcptCmd(mail));
         }
     }
     
@@ -466,12 +466,12 @@ class SmtpTransport : AbstractTransport {
         }
         timeout = configuration.data("timeout"];
 
-        while ($checkCode != false) {
+        while (checkCode != false) {
             response = "";
             startTime = time();
             while (!response.endsWith("\r\n") && (time() - startTime < timeout)) {
                 bytes = _socket.read();
-                if ($bytes.isNull) {
+                if (bytes.isNull) {
                     break;
                 }
                 response ~= bytes;
@@ -482,12 +482,12 @@ class SmtpTransport : AbstractTransport {
                 throw new SocketException(response ?: "SMTP timeout.");
             }
             responseLines = split("\r\n", rtrim(response, "\r\n"));
-            response = end($responseLines);
+            response = end(responseLines);
 
-           _bufferResponseLines($responseLines);
+           _bufferResponseLines(responseLines);
 
             if (preg_match("/^(" ~ checkCode ~ ")(.)/", response, code)) {
-                if ($code[2] == "-") {
+                if (code[2] == "-") {
                     continue;
                 }
                 return code[1];

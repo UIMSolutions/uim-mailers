@@ -18,11 +18,11 @@ import uim.cake;
  * ```
  * class UserMailer : Mailer
  * {
- *    auto resetPassword($user)
+ *    auto resetPassword(user)
  *    {
  *        this
  *            .setSubject("Reset Password")
- *            .setTo($user.email)
+ *            .setTo(user.email)
  *            .set(["token": user.token]);
  *    }
  * }
@@ -57,8 +57,8 @@ import uim.cake;
  *
  * auto onRegistration(IEvent event, IEntity entity, ArrayObject options)
  * {
- *    if ($entity.isNew()) {
- *         this.send("welcome", [$entity]);
+ *    if (entity.isNew()) {
+ *         this.send("welcome", [entity]);
  *    }
  * }
  * ```
@@ -67,46 +67,46 @@ import uim.cake;
  * Our mailer could either be registered in the application bootstrap, or
  * in the Table class" initialize() hook.
  *
- * @method this setTo($email, name = null) Sets "to" address. {@see \UIM\Mailer\Message.setTo()}
+ * @method this setTo(email, name = null) Sets "to" address. {@see \UIM\Mailer\Message.setTo()}
  * @method array getTo() Gets "to" address. {@see \UIM\Mailer\Message.getTo()}
- * @method this setFrom($email, name = null) Sets "from" address. {@see \UIM\Mailer\Message.setFrom()}
+ * @method this setFrom(email, name = null) Sets "from" address. {@see \UIM\Mailer\Message.setFrom()}
  * @method array getFrom() Gets "from" address. {@see \UIM\Mailer\Message.getFrom()}
- * @method this setSender($email, name = null) Sets "sender" address. {@see \UIM\Mailer\Message.setSender()}
+ * @method this setSender(email, name = null) Sets "sender" address. {@see \UIM\Mailer\Message.setSender()}
  * @method array getSender() Gets "sender" address. {@see \UIM\Mailer\Message.getSender()}
- * @method this setReplyTo($email, name = null) Sets "Reply-To" address. {@see \UIM\Mailer\Message.setReplyTo()}
+ * @method this setReplyTo(email, name = null) Sets "Reply-To" address. {@see \UIM\Mailer\Message.setReplyTo()}
  * @method array getReplyTo() Gets "Reply-To" address. {@see \UIM\Mailer\Message.getReplyTo()}
- * @method this addReplyTo($email, name = null) Add "Reply-To" address. {@see \UIM\Mailer\Message.addReplyTo()}
- * @method this setReadReceipt($email, name = null) Sets Read Receipt (Disposition-Notification-To header).
+ * @method this addReplyTo(email, name = null) Add "Reply-To" address. {@see \UIM\Mailer\Message.addReplyTo()}
+ * @method this setReadReceipt(email, name = null) Sets Read Receipt (Disposition-Notification-To header).
  *  {@see \UIM\Mailer\Message.setReadReceipt()}
  * @method array getReadReceipt() Gets Read Receipt (Disposition-Notification-To header).
  *  {@see \UIM\Mailer\Message.getReadReceipt()}
- * @method this setReturnPath($email, name = null) Sets return path. {@see \UIM\Mailer\Message.setReturnPath()}
+ * @method this setReturnPath(email, name = null) Sets return path. {@see \UIM\Mailer\Message.setReturnPath()}
  * @method array getReturnPath() Gets return path. {@see \UIM\Mailer\Message.getReturnPath()}
- * @method this addTo($email, name = null) Add "To" address. {@see \UIM\Mailer\Message.addTo()}
- * @method this setCc($email, name = null) Sets "cc" address. {@see \UIM\Mailer\Message.setCc()}
+ * @method this addTo(email, name = null) Add "To" address. {@see \UIM\Mailer\Message.addTo()}
+ * @method this setCc(email, name = null) Sets "cc" address. {@see \UIM\Mailer\Message.setCc()}
  * @method array getCc() Gets "cc" address. {@see \UIM\Mailer\Message.getCc()}
- * @method this addCc($email, name = null) Add "cc" address. {@see \UIM\Mailer\Message.addCc()}
- * @method this setBcc($email, name = null) Sets "bcc" address. {@see \UIM\Mailer\Message.setBcc()}
+ * @method this addCc(email, name = null) Add "cc" address. {@see \UIM\Mailer\Message.addCc()}
+ * @method this setBcc(email, name = null) Sets "bcc" address. {@see \UIM\Mailer\Message.setBcc()}
  * @method array getBcc() Gets "bcc" address. {@see \UIM\Mailer\Message.getBcc()}
- * @method this addBcc($email, name = null) Add "bcc" address. {@see \UIM\Mailer\Message.addBcc()}
- * @method this setCharset($charset) Charset setter. {@see \UIM\Mailer\Message.setCharset()}
+ * @method this addBcc(email, name = null) Add "bcc" address. {@see \UIM\Mailer\Message.addBcc()}
+ * @method this setCharset(charset) Charset setter. {@see \UIM\Mailer\Message.setCharset()}
  * @method string getCharset() Charset getter. {@see \UIM\Mailer\Message.getCharset()}
- * @method this setHeaderCharset($charset) HeaderCharset setter. {@see \UIM\Mailer\Message.setHeaderCharset()}
+ * @method this setHeaderCharset(charset) HeaderCharset setter. {@see \UIM\Mailer\Message.setHeaderCharset()}
  * @method string getHeaderCharset() HeaderCharset getter. {@see \UIM\Mailer\Message.getHeaderCharset()}
- * @method this setSubject($subject) Sets subject. {@see \UIM\Mailer\Message.setSubject()}
+ * @method this setSubject(subject) Sets subject. {@see \UIM\Mailer\Message.setSubject()}
  * @method string getSubject() Gets subject. {@see \UIM\Mailer\Message.getSubject()}
  * @method this setHeaders(array  aHeaders) Sets headers for the message. {@see \UIM\Mailer\Message.setHeaders()}
  * @method this addHeaders(array  aHeaders) Add header for the message. {@see \UIM\Mailer\Message.addHeaders()}
  * @method this getHeaders(array  anInclude = []) Get list of headers. {@see \UIM\Mailer\Message.getHeaders()}
- * @method this setEmailFormat($format) Sets email format. {@see \UIM\Mailer\Message.getHeaders()}
+ * @method this setEmailFormat(format) Sets email format. {@see \UIM\Mailer\Message.getHeaders()}
  * @method string getEmailFormat() Gets email format. {@see \UIM\Mailer\Message.getEmailFormat()}
- * @method this setMessageId($message) Sets message ID. {@see \UIM\Mailer\Message.setMessageId()}
+ * @method this setMessageId(message) Sets message ID. {@see \UIM\Mailer\Message.setMessageId()}
  * @method string|bool getMessageId() Gets message ID. {@see \UIM\Mailer\Message.getMessageId()}
- * @method this setDomain($domain) Sets domain. {@see \UIM\Mailer\Message.setDomain()}
+ * @method this setDomain(domain) Sets domain. {@see \UIM\Mailer\Message.setDomain()}
  * @method string getDomain() Gets domain. {@see \UIM\Mailer\Message.getDomain()}
- * @method this setAttachments($attachments) Add attachments to the email message. {@see \UIM\Mailer\Message.setAttachments()}
+ * @method this setAttachments(attachments) Add attachments to the email message. {@see \UIM\Mailer\Message.setAttachments()}
  * @method array getAttachments() Gets attachments to the email message. {@see \UIM\Mailer\Message.getAttachments()}
- * @method this addAttachments($attachments) Add attachments. {@see \UIM\Mailer\Message.addAttachments()}
+ * @method this addAttachments(attachments) Add attachments. {@see \UIM\Mailer\Message.addAttachments()}
  * @method string[] getBody(string atype = null) Get generated message body as array.
  *  {@see \UIM\Mailer\Message.getBody()}
  */
@@ -227,8 +227,8 @@ class Mailer : IEventListener {
      * @param array someArguments Method arguments
      */
     Json __call(string amethod, array someArguments) {
-        Json result = this.message.$method(...someArguments);
-        if (str_starts_with($method, "get")) {
+        Json result = this.message.method(...someArguments);
+        if (str_starts_with(method, "get")) {
             return result;
         }
         return Json(null);
@@ -253,7 +253,7 @@ class Mailer : IEventListener {
      * @param array  aHeaders Headers to set.
      */
     array send(string aaction = null, array someArguments = [], array  aHeaders = []) {
-        if ($action.isNull) {
+        if (action.isNull) {
             return this.deliver();
         }
         if (!method_exists(this, action)) {
@@ -269,10 +269,10 @@ class Mailer : IEventListener {
         }
         this.getMessage().setHeaders( aHeaders);
         if (!this.viewBuilder().getTemplate()) {
-            this.viewBuilder().setTemplate($action);
+            this.viewBuilder().setTemplate(action);
         }
         try {
-            this.$action(...someArguments);
+            this.action(...someArguments);
 
             result = this.deliver();
         } finally {
@@ -292,7 +292,7 @@ class Mailer : IEventListener {
             this.message.getBodyTypes()
         );
 
-        this.message.setBody($content);
+        this.message.setBody(content);
 
         return this;
     }
@@ -303,7 +303,7 @@ class Mailer : IEventListener {
      * string acontent Content.
      */
     array deliver(string acontent= null) {
-        this.render($content);
+        this.render(content);
 
         result = this.getTransport().send(this.message);
         this.logDelivery(result);
@@ -320,12 +320,12 @@ class Mailer : IEventListener {
     auto setProfile(string[] configData) {
         if (isString(configData)) {
             name = configData;
-            configData = getConfig($name);
+            configData = getConfig(name);
             if (isEmpty(configData)) {
                 throw new InvalidArgumentException(
-                    "Unknown email configuration `%s`.".format($name));
+                    "Unknown email configuration `%s`.".format(name));
             }
-            unset($name);
+            unset(name);
         }
         simpleMethods = [
             "transport",
@@ -339,9 +339,9 @@ class Mailer : IEventListener {
 
         auto viewBuilderMethods = ["template", "layout", "theme"];
         viewBuilderMethods
-            .filter!(method => array_key_exists($method, configData))
+            .filter!(method => array_key_exists(method, configData))
             .each!((method) {
-                this.viewBuilder().{"set" ~ ucfirst($method)}(configData[method]);
+                this.viewBuilder().{"set" ~ ucfirst(method)}(configData[method]);
                 unset(configData[method]);
             });
 
@@ -381,8 +381,8 @@ class Mailer : IEventListener {
      *  transport, or a transport instance.
      */
     void setTransport(AbstractTransport|string aName) {
-        this.transport = isString($name) 
-            ? TransportFactory.get($name)
+        this.transport = isString(name) 
+            ? TransportFactory.get(name)
             : name;
     }
     
@@ -436,7 +436,7 @@ class Mailer : IEventListener {
         }
         Log.write(
             this.logConfig["level"],
-            D_EOL ~ this.flatten($contents["headers"]) ~ D_EOL ~ D_EOL ~ this.flatten($contents["message"]),
+            D_EOL ~ this.flatten(contents["headers"]) ~ D_EOL ~ D_EOL ~ this.flatten(contents["message"]),
             this.logConfig["scope"]
         );
     }
@@ -452,7 +452,7 @@ class Mailer : IEventListener {
             "scope": ["cake.mailer", "email"],
         ];
         if (log != true) {
-            if (!isArray($log)) {
+            if (!isArray(log)) {
                 log = ["level": log];
             }
             configData = log + configData;

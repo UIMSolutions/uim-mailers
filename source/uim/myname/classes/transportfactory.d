@@ -46,17 +46,17 @@ class TransportFactory {
      * string aName Name of the config array that needs a tranport instance built
      */
     protected static void _buildTransport(string aName) {
-        if (!_config.isSet($name)) {
+        if (!_config.isSet(name)) {
             throw new InvalidArgumentException(
-                "The `%s` transport configuration does not exist".format($name)
+                "The `%s` transport configuration does not exist".format(name)
             );
         }
-        if (isArray(configuration.data($name]) && empty(configuration.data($name]["className"])) {
+        if (isArray(configuration.data(name]) && empty(configuration.data(name]["className"])) {
             throw new InvalidArgumentException(
-                "Transport config `%s` is invalid, the required `className` option is missing".format($name)
+                "Transport config `%s` is invalid, the required `className` option is missing".format(name)
             );
         }
-        getRegistry().load($name, configuration.data($name]);
+        getRegistry().load(name, configuration.data(name]);
     }
     
     /**
@@ -67,11 +67,11 @@ class TransportFactory {
     static AbstractTransport get(string aName) {
         registry = getRegistry();
 
-        if (isSet($registry.{$name})) {
-            return registry.{$name};
+        if (isSet(registry.{name})) {
+            return registry.{name};
         }
-        _buildTransport($name);
+        _buildTransport(name);
 
-        return registry.{$name};
+        return registry.{name};
     }
 }
