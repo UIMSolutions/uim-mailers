@@ -31,13 +31,13 @@ class MailSubjectContains : MailConstraintBase {
     // Returns the subjects of all messages respects this.at
     protected string getAssertedMessages() {
         auto messages = this.getMessages();
-        auto messageMembers = messages.map!(message => message.getSubject()).array;
+        string[] messageMembers = messages.map!(message => message.getSubject()).array;
 
         if (this.at && isSet(messageMembers[this.at - 1])) {
             messageMembers = [messageMembers[this.at - 1]];
         }
-        result = join(D_EOL, messageMembers);
 
+        string result = messageMembers.join(D_EOL);
         return D_EOL ~ "was: " ~ mb_substr(result, 0, 1000);
     }
     

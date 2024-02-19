@@ -663,11 +663,9 @@ class Message : JsonSerializable {
          aHeadersMultipleEmails = ["to", "cc", "bcc", "replyTo"];
         foreach (relation as var:  aHeader) {
             if (anInclude[var]) {
-                if (in_array(var,  aHeadersMultipleEmails)) {
-                     aHeaders[aHeader] = join(", ", this.formatAddress(this.{var}));
-                } else {
-                     aHeaders[aHeader] = (string)current(this.formatAddress(this.{var}));
-                }
+                aHeaders[aHeader] = aHeadersMultipleEmails.has(var)
+                    ? this.formatAddress(this.{var}).join(", ")
+                    : (string)current(this.formatAddress(this.{var}));
             }
         }
         if (anInclude["sender"]) {
