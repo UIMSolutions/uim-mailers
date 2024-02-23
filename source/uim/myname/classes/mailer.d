@@ -401,14 +401,14 @@ class Mailer : IEventListener {
     
     // Restore message, renderer, transport instances to state before an action was run.
     protected void restore() {
-        array_keys(this.clonedInstances).each!((key) {
+        this.clonedInstances.keys.each!((key) {
             if (this.clonedInstances[key].isNull) {
                 this.{key} = null;
             } else {
                 this.{key} = clone this.clonedInstances[key];
                 this.clonedInstances[key] = null;
             }
-        }
+        });
     }
     
     // Reset all the internal variables to be able to send out a new email.
