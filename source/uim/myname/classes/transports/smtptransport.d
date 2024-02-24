@@ -381,7 +381,7 @@ class SmtpTransport : AbstractTransport {
         cc = message.getCc();
         bcc = message.getBcc();
 
-        return chain(to.keys, array_keys(cc), array_keys(bcc));
+        return chain(to.keys, cc.keys, bcc.keys);
     }
     
     /**
